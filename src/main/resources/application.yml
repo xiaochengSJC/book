@@ -1,0 +1,22 @@
+#端口配置
+server:
+  port: 8088
+
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/book_manage
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  #mybatis配置
+  mybatis:
+    #实体类所在包名
+    type-aliases-package: com.example.book.model
+  #通用mapper配置
+  mapper:
+    #公用接口类路径
+    mappers: com.example.mapper.userDao
+    identity: MYSQL
+sring:
+  resources:
+    static-locations:classpath:upload/

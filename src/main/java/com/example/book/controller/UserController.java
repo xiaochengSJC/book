@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @CrossOrigin//支持跨域
@@ -31,17 +29,29 @@ public class UserController {
     @ResponseBody
     //@CrossOrigin
     public CommonResponse getUserInfo(@RequestBody Map<String,Object> map, HttpSession session) {
+        String roleId = map.get("roleId")==null?"":map.get("roleId").toString();
+        if("".equals(roleId)){
+            roleId = "0";
+        }
+        String userName = map.get("userName")==null?"":map.get("userName").toString();
         String keyword = map.get("keyword")==null?"":map.get("keyword").toString();
         String pageSize = map.get("pageSize")==null?"":map.get("pageSize").toString();
         String pageNum = map.get("pageNum")==null?"":map.get("pageNum").toString();
-        List<User> list = userService.selectUserInfo(keyword,pageSize,pageNum);
-        int total =userService.totalUser(keyword,pageSize,pageNum);
+        List<User> list = new ArrayList<User>();
+        int total = 0;
+        if("0".equals(roleId)){
+            list = userService.selectUserInfo(keyword,pageSize,pageNum);
+            total =userService.totalUser(keyword,pageSize,pageNum);
+        }else{
+            User user1 = userService.selectInfoByName(userName);
+            list.add(user1);
+        }
         map.put("list",list);
         map.put("total",total);
         if (list == null) {
             return new CommonResponse(ProjectConstants.ERROR_CODE,"查询失败，请重试",null);
         }
-        session.setAttribute("userList", list);
+
         return new CommonResponse(ProjectConstants.SUCCESS_CODE,"查询成功",map);
     }
 
@@ -164,5 +174,26 @@ public class UserController {
             return new CommonResponse(ProjectConstants.ERROR_CODE,"删除用户失败",null);
         }
         return new CommonResponse(ProjectConstants.SUCCESS_CODE,"删除成功",null);
+    }
+
+    /**
+     * 修改密码
+     */
+    @PostMapping("/updatePassword")
+    @ResponseBody
+    //@CrossOrigin
+    public CommonResponse updatePassword(@RequestBody Map<String,Object> map, HttpSession session) {
+        User user = (User) session.getAttribute("loginUser");
+        String password = map.get("password")==null?" ":map.get("password").toString();
+        if(!user.getPassword().equals(Md5Util.MD5(password))){
+            return new CommonResponse(ProjectConstants.ERROR_CODE,"原始密码输入错误，请重新输入！",null);
+        }
+        String password1 = map.get("password1")==null?" ":map.get("password1").toString();
+        user.setPassword(Md5Util.MD5(password1));
+        int count = userService.editUser(user);
+        if (count != 1) {
+            return new CommonResponse(ProjectConstants.ERROR_CODE,"更新密码失败",null);
+        }
+        return new CommonResponse(ProjectConstants.SUCCESS_CODE,"更新密码成功",null);
     }
 }

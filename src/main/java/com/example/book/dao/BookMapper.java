@@ -60,7 +60,7 @@ public interface BookMapper {
         "DESCRIPTION =#{description},",
         "PRESS =#{press},",
         "STATUS =#{status},",
-        "CREATE_TIME =#{createTime}" +
+        "CREATE_TIME =#{createTime} " +
         "where id = #{id}"
     })
     int updateBook(Book book);

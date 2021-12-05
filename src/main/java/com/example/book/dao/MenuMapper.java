@@ -16,6 +16,7 @@ public interface MenuMapper {
             "<if test='roleId != null and roleId != \"\"'>"+
             " and role_id =#{roleId}" +
             "</if>" +
+            "order by id" +
             "</script>")
     List<Menu> getMenuByRoleId(@Param("roleId") String roleId);
 

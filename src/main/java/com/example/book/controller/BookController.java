@@ -45,9 +45,12 @@ public class BookController {
     public CommonResponse getBookInfo(@RequestBody Map<String,Object> map, HttpSession session){
         String typeId = map.get("typeId")==null?"":map.get("typeId").toString();
         String bookName = map.get("bookName")==null?"":map.get("bookName").toString();
+        String card = map.get("card")==null?"":map.get("card").toString();
+        String authName = map.get("authName")==null?"":map.get("authName").toString();
+        String press = map.get("press")==null?"":map.get("press").toString();
         String pageSize = map.get("pageSize")==null?"":map.get("pageSize").toString();
         String pageNum = map.get("pageNum")==null?"":map.get("pageNum").toString();
-        List<Book> list = bookService.getBookInfo(typeId,bookName);
+        List<Book> list = bookService.getBookInfo(typeId,bookName,pageSize,pageNum,authName,card,press);
         if(list == null){
             return new CommonResponse(ProjectConstants.ERROR_CODE,"查询失败",null);
         }
@@ -63,7 +66,9 @@ public class BookController {
                 bean.setStatus("已借出");
             }
         });
+        int total = bookService.getBookCount(typeId,bookName,authName,card,press);
         map.put("list",list);
+        map.put("total",total);
         return new CommonResponse(ProjectConstants.SUCCESS_CODE,"查询成功",map);
     }
 
@@ -191,7 +196,7 @@ public class BookController {
      * 修改读者信息
      */
 
-    @PostMapping("/deleteUserInfo")
+    @PostMapping("/deleteBookInfo")
     @ResponseBody
     //@CrossOrigin
     public CommonResponse deleteBookInfo(@RequestBody Map<String,Object> map, HttpSession session) {
@@ -211,7 +216,7 @@ public class BookController {
         String typeName = map.get("typeName")==null?"":map.get("typeName").toString();
         String pageSize = map.get("pageSize")==null?"":map.get("pageSize").toString();
         String pageNum = map.get("pageNum")==null?"":map.get("pageNum").toString();
-        List<BookType> list = bookService.getBookType(typeName);
+        List<BookType> list = bookService.getBookType(typeName,pageSize,pageNum);
         if(list == null){
             return new CommonResponse(ProjectConstants.ERROR_CODE,"查询失败",null);
         }

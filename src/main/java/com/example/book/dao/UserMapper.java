@@ -17,7 +17,7 @@ public interface UserMapper {
             " and ( user_name like concat('%',#{keyword},'%') or name like concat('%',#{keyword},'%'))"  +
             "</if>" +
             "</script>")
-    List<User> selectUserInfo(@Param("keyword")String keyword,@Param("pageSize")int pageSize,@Param("pageNum")int pageNum);
+    List<User> selectUserInfo(@Param("keyword")String keyword);
 
     @Select("<script>" +
             "select count(1) from t_user " +
@@ -26,7 +26,7 @@ public interface UserMapper {
             " and (user_name like concat('%',#{keyword},'%') or name like concat('%',#{keyword},'%'))"  +
             "</if>" +
             "</script>")
-    int totalUser(@Param("keyword")String keyword,@Param("pageSize")int pageSize,@Param("pageNum")int pageNum);
+    int totalUser(@Param("keyword")String keyword);
 
     @Select("select id as id,user_name as userName,name as name ,password as password,email as email,phone as phone,role_id as roleId,create_time as createTime from t_user where user_name=#{userName}")
     User selectInfoByName(@Param("userName")String userName);

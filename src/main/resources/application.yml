@@ -20,3 +20,8 @@ spring:
 sring:
   resources:
     static-locations:classpath:upload/
+ #pagehelper配置--分页
+pagehelper:
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql

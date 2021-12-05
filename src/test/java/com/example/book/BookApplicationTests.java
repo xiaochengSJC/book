@@ -33,7 +33,6 @@ class BookApplicationTests {
     @Test
     public void getBookById(){
 
-        System.out.println(bookMapper.getBookInfo("1",""));
     }
 
     @Test

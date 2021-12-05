@@ -7,6 +7,8 @@ import com.example.book.model.Book;
 import com.example.book.model.BookType;
 import com.example.book.model.Borrow;
 import com.example.book.service.BookService;
+import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +28,16 @@ public class BookServiceImpl implements BookService {
     private BorrowMapper borrowMapper;
 
     @Override
-    public List<Book> getBookInfo(String typeId, String bookName) {
-        return bookMapper.getBookInfo(typeId,bookName);
+    public List<Book> getBookInfo(String typeId, String bookName, String pagesize, String begNum, String authName, String card, String press) {
+        int pageNum = Integer.parseInt(begNum);
+        int pageSize = Integer.parseInt(pagesize);
+        PageHelper.startPage(pageNum,pageSize);
+        return bookMapper.getBookInfo(typeId,bookName,authName,card,press);
+    }
+
+    @Override
+    public int getBookCount(String typeId, String bookName, String authName, String card, String press) {
+        return bookMapper.getBookCount(typeId,bookName,authName,card,press);
     }
 
     @Override
@@ -52,8 +62,18 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookType> getBookType(String typeName) {
-        return bookTypeMapper.getBookType(typeName);
+    public List<BookType> getBookType(String typeName,String pagesize,String begNum) {
+        int pageNum = 1;
+        int pageSize = 9999;
+        if(!"".equals(begNum)){
+            pageNum = Integer.parseInt(begNum);
+        }
+        if(!"".equals(pagesize)){
+            pageSize = Integer.parseInt(pagesize);
+        }
+        PageHelper.startPage(pageNum,pageSize);
+        List<BookType> list = bookTypeMapper.getBookType(typeName);
+        return list;
     }
 
     @Override
@@ -87,8 +107,40 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Map<String, Object>> getRecord(String typeId, String bookName, String borrowTime, String userName, String realTime) {
-        return borrowMapper.getBorrowRecord(typeId,bookName,borrowTime,userName,realTime);
+    public List<Map<String, Object>> getRecord(String typeId, String bookName, String borrowTime, String userName, String realTime,String pagesize,String begNum) {
+        int pageNum = Integer.parseInt(begNum);
+        int pageSize = Integer.parseInt(pagesize);
+        PageHelper.startPage(pageNum,pageSize);
+        List<Map<String, Object>> list = borrowMapper.getBorrowRecord(typeId,bookName,borrowTime,userName,realTime);
+        return list;
+    }
+    @Override
+    public int getRecordCount(String typeId, String bookName, String borrowTime, String userName, String realTime) {
+        return borrowMapper.getRecordCount(typeId,bookName,borrowTime,userName,realTime);
+    }
+
+    @Override
+    public List<Map<String, Object>> getBorrowList(String typeId, String bookName, String borrowTime, String userName,String pagesize,String begNum) {
+        int pageNum = Integer.parseInt(begNum);
+        int pageSize = Integer.parseInt(pagesize);
+        PageHelper.startPage(pageNum,pageSize);
+        List<Map<String, Object>> list = borrowMapper.getBorrowList(typeId,bookName,borrowTime,userName);
+        return list;
+    }
+
+    @Override
+    public int getBorrowCount(String typeId, String bookName, String borrowTime, String userName) {
+        return borrowMapper.getBorrowCount(typeId,bookName,borrowTime,userName);
+    }
+
+    @Override
+    public Borrow getBorrowById(String id) {
+        return borrowMapper.getBorrowById(id);
+    }
+
+    @Override
+    public int updateBorrowRecord(Borrow borrow) {
+        return borrowMapper.updateBorrowRecord(borrow);
     }
 
 

@@ -3,6 +3,7 @@ package com.example.book.service.impl;
 import com.example.book.dao.UserMapper;
 import com.example.book.model.User;
 import com.example.book.service.UserService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,9 @@ public class UserServiceImpl implements UserService {
     public List<User> selectUserInfo(String keyword,String pagesize,String begNum) {
         int pageNum = Integer.parseInt(begNum);
         int pageSize = Integer.parseInt(pagesize);
-        return userDao.selectUserInfo(keyword,pageSize,pageNum);
+        PageHelper.startPage(pageNum,pageSize);
+        List<User> list = userDao.selectUserInfo(keyword);
+        return list;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public int totalUser(String keyword,String pagesize,String begNum) {
         int pageNum = Integer.parseInt(begNum);
         int pageSize = Integer.parseInt(pagesize);
-        return userDao.totalUser(keyword,pageSize,pageNum);
+        return userDao.totalUser(keyword);
     }
 
     @Override

@@ -93,6 +93,8 @@ public class UserController {
         user.setLendNum(Integer.parseInt(lendNum));
         user.setMaxNum(Integer.parseInt(maxNum));
         user.setCreateTime(format);
+
+
         int count = userService.addUser(user);
         System.out.println(count);
         if (count != 1) {
